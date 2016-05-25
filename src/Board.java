@@ -11,9 +11,11 @@ import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 
 public class Board extends JFrame {
-	private Spot[][] spots = new Spot[6][6];
+	public Spot[][] spots = new Spot[6][6];
 	private JPanel contentPane;
+	// 当前选中的格子
 	private Spot selectedSpot;
+	private int lastPlayer = Piece.PLAYER_WHITE;
 
 	public Board(int gridSize) {
 		setTitle("Chess");
@@ -30,14 +32,28 @@ public class Board extends JFrame {
 				spot.addMouseListener(new MouseAdapter() {
 					public void mouseClicked(MouseEvent e) {
 						if (spot.getPiece() != null && selectedSpot == null) {
+							if (spot.getPiece().getPlayer() == lastPlayer)// 判断所选棋子是否是上个次操作过的玩家的棋子
+								return;
 							selectedSpot = spot;
-							spot.setBorder(BorderFactory.createLineBorder(Color.blue,3));
-						} else if (spot.getPiece() == null && selectedSpot != null) {
-							movePiece(selectedSpot.getPositionX(), selectedSpot.getPositionY(), spot.getPositionX(),
-									spot.getPositionY());
-							selectedSpot.setBorder(null);
-							selectedSpot = null;
+							spot.setBorder(BorderFactory.createLineBorder(Color.blue, 3));
+						} else if (selectedSpot != null) {
+							if (spot.getPiece() == null) {
+								move();
+							} else if (spot.getPiece().getPlayer() != selectedSpot.getPiece().getPlayer()) {
+								move();
+							} else if (spot == selectedSpot) {
+								selectNone();
+								return;
+							}
 						}
+					}
+
+					private void move() {
+						if (selectedSpot.getPiece().canBeMove(selectedSpot, spot, Board.this)) {
+							movePiece(selectedSpot, spot);
+							lastPlayer = spot.getPiece().getPlayer();
+						}
+						selectNone();
 					}
 				});
 				spots[i][j] = spot;
@@ -46,13 +62,18 @@ public class Board extends JFrame {
 		}
 	}
 
+	public void selectNone() {
+		selectedSpot.setBorder(null);
+		selectedSpot = null;
+	}
+
 	public void setPiece(int x, int y, Piece piece) {
 		spots[x][y].setPiece(piece);
 	}
 
-	public void movePiece(int fromX, int fromY, int toX, int toY) {
-		Piece piece = spots[fromX][fromY].getPiece();
-		spots[toX][toY].setPiece(piece);
-		spots[fromX][fromY].setPiece(null);
+	public void movePiece(Spot fromSpot, Spot toSpot) {
+		Piece piece = fromSpot.getPiece();
+		toSpot.setPiece(piece);
+		fromSpot.setPiece(null);
 	}
 }

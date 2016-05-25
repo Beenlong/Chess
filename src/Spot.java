@@ -8,6 +8,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 public class Spot extends JPanel {
 	private int x, y, size, borderSize = 10;
@@ -44,16 +45,13 @@ public class Spot extends JPanel {
 	}
 
 	public void setPiece(Piece piece) {
-		//下面两个方法是用来提醒父控件需要进行刷新的……没找到合适的方法
-		remove(label);
-		add(label);
 		if (piece != null) {
-			icon.setImage(ImageHolder.getImage(piece.getType()).getScaledInstance(size - borderSize, size - borderSize,
-					Image.SCALE_DEFAULT));
+			icon.setImage(ImageHolder.getImage(piece).getScaledInstance(size - borderSize, size - borderSize, Image.SCALE_DEFAULT));
 			label.setVisible(true);
 		} else {
 			label.setVisible(false);
 		}
 		this.piece = piece;
+		SwingUtilities.updateComponentTreeUI(this);
 	}
 }

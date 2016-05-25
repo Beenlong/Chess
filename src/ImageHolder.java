@@ -8,20 +8,23 @@ public class ImageHolder {
 		init();
 	}
 
-	public static Image getImage(int type) {
-		switch (type) {
-		case Piece.TYPE_BISHOP_BLACK:
-			return bishop_black;
-		case Piece.TYPE_BISHOP_WHITE:
-			return bishop_white;
-		case Piece.TYPE_KNIGHT_BLACK:
-			return knight_black;
-		case Piece.TYPE_KNIGHT_WHITE:
-			return knight_white;
-		case Piece.TYPE_ROOK_BLACK:
-			return rook_black;
-		case Piece.TYPE_ROOK_WHITE:
-			return rook_white;
+	public static Image getImage(Piece piece) {
+		switch (piece.getType()) {
+		case Piece.TYPE_BISHOP:
+			if (piece.getPlayer() == Piece.PLAYER_WHITE)
+				return bishop_white;
+			else
+				return bishop_black;
+		case Piece.TYPE_KNIGHT:
+			if (piece.getPlayer() == Piece.PLAYER_WHITE)
+				return knight_white;
+			else
+				return knight_black;
+		case Piece.TYPE_ROOK:
+			if (piece.getPlayer() == Piece.PLAYER_WHITE)
+				return rook_white;
+			else
+				return rook_black;
 		}
 		return null;
 	}
