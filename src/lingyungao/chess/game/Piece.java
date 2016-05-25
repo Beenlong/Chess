@@ -1,3 +1,4 @@
+package lingyungao.chess.game;
 
 public class Piece {
 	public static final int TYPE_BISHOP = 0;
