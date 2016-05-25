@@ -1,27 +1,29 @@
 package lingyungao.chess.game;
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
+
+import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import java.awt.Color;
 
 public class Board extends JFrame {
+	private static final long serialVersionUID = -2100109380385562615L;
+	public static final int PLAYER_BLACK = 0;
+	public static final int PLAYER_WHITE = 1;
+	
+	private final int gridSize = 100;
 	public Spot[][] spots = new Spot[6][6];
+	public int lastPlayer = PLAYER_WHITE;
 	private JPanel contentPane;
-	private int boardSize;
 	// 当前选中的格子
 	private Spot selectedSpot;
-	private int lastPlayer = Piece.PLAYER_WHITE;
 	private OnPieceRemovedListener onPieceRemovedListener;
-	private OnPieceMovedListener onPieceMovedListener;
+	private OnPieceMoveListener onPieceMoveListener;
 
-	public Board(int gridSize) {
+	public Board() {
 		setTitle("Chess");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -53,7 +55,7 @@ public class Board extends JFrame {
 									Piece fromPiece = selectedSpot.getPiece(), removedPiece = spot.getPiece();
 									move();
 									if (onPieceRemovedListener != null) {
-										onPieceRemovedListener.onRemoved(fromPiece, removedPiece, spot);
+										onPieceRemovedListener.onRemoved(fromPiece, removedPiece);
 									}
 									return;
 								} else {
@@ -66,11 +68,13 @@ public class Board extends JFrame {
 
 					private void move() {
 						if (selectedSpot.getPiece().canBeMove(selectedSpot, spot, Board.this)) {
-							movePiece(selectedSpot, spot);
-							lastPlayer = spot.getPiece().getPlayer();
-							if (onPieceMovedListener != null) {
-								onPieceMovedListener.onMoved(selectedSpot, spot, selectedSpot.getPiece());
+							if (onPieceMoveListener != null) {
+								onPieceMoveListener.onMove(selectedSpot, spot);
 							}
+							Piece piece = selectedSpot.getPiece();
+							spot.setPiece(piece);
+							selectedSpot.setPiece(null);
+							lastPlayer = spot.getPiece().getPlayer();
 						}
 						selectNone();
 					}
@@ -101,35 +105,27 @@ public class Board extends JFrame {
 		spots[x][y].setPiece(piece);
 	}
 
-	private void movePiece(Spot fromSpot, Spot toSpot) {
-		Piece piece = fromSpot.getPiece();
-		toSpot.setPiece(piece);
-		fromSpot.setPiece(null);
-	}
-
 	public void setOnPieceRemovedListener(OnPieceRemovedListener listener) {
 		onPieceRemovedListener = listener;
 	}
 
-	public void setOnPieceMovedListener(OnPieceMovedListener listener) {
-		onPieceMovedListener = listener;
+	public void setOnPieceMovedListener(OnPieceMoveListener listener) {
+		onPieceMoveListener = listener;
 	}
 
 	public interface OnPieceRemovedListener {
 		/**
-		 * 当棋子被吃掉的时候调用
+		 * 棋子被吃掉的时候调用
 		 * 
 		 * @param fromPiece
 		 *            吃掉棋子的棋子
 		 * @param removedPiece
 		 *            被吃掉的棋子
-		 * @param spot
-		 *            吃掉棋子所在格子（已经被吃掉后的状态）
 		 */
-		void onRemoved(Piece fromPiece, Piece removedPiece, Spot spot);
+		void onRemoved(Piece fromPiece, Piece removedPiece);
 	}
 
-	public interface OnPieceMovedListener {
-		void onMoved(Spot fromSpot, Spot toSpot, Piece piece);
+	public interface OnPieceMoveListener {
+		void onMove(Spot fromSpot, Spot toSpot);
 	}
 }

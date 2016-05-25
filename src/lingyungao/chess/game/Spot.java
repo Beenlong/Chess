@@ -1,17 +1,14 @@
 package lingyungao.chess.game;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Image;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
 public class Spot extends JPanel {
+	private static final long serialVersionUID = -1300234966958817950L;
 	private int x, y, size, borderSize = 10;
 	private JLabel label;
 	private ImageIcon icon;

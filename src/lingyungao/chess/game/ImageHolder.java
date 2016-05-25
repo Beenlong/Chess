@@ -1,4 +1,5 @@
 package lingyungao.chess.game;
+
 import java.awt.Image;
 import java.awt.Toolkit;
 
@@ -12,17 +13,17 @@ public class ImageHolder {
 	public static Image getImage(Piece piece) {
 		switch (piece.getType()) {
 		case Piece.TYPE_BISHOP:
-			if (piece.getPlayer() == Piece.PLAYER_WHITE)
+			if (piece.getPlayer() == Board.PLAYER_WHITE)
 				return bishop_white;
 			else
 				return bishop_black;
 		case Piece.TYPE_KNIGHT:
-			if (piece.getPlayer() == Piece.PLAYER_WHITE)
+			if (piece.getPlayer() == Board.PLAYER_WHITE)
 				return knight_white;
 			else
 				return knight_black;
 		case Piece.TYPE_ROOK:
-			if (piece.getPlayer() == Piece.PLAYER_WHITE)
+			if (piece.getPlayer() == Board.PLAYER_WHITE)
 				return rook_white;
 			else
 				return rook_black;

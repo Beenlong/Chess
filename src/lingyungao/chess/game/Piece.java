@@ -4,8 +4,6 @@ public class Piece {
 	public static final int TYPE_BISHOP = 0;
 	public static final int TYPE_KNIGHT = 1;
 	public static final int TYPE_ROOK = 2;
-	public static final int PLAYER_BLACK = 0;
-	public static final int PLAYER_WHITE = 1;
 	private int type;
 	private int player;
 
